@@ -4,11 +4,13 @@ namespace Gnoesiboe\Validator\Exception;
 
 use Gnoesiboe\Validator\Support\KeyValueBag;
 use Illuminate\Support\Contracts\ArrayableInterface;
+use Illuminate\Support\Contracts\MessageProviderInterface;
+use Illuminate\Support\MessageBag;
 
 /**
  * Class ValidationSetException
  */
-final class ValidationSetException extends \Exception implements ArrayableInterface
+final class ValidationSetException extends \Exception implements ArrayableInterface, MessageProviderInterface
 {
 
     /**
@@ -75,5 +77,15 @@ final class ValidationSetException extends \Exception implements ArrayableInterf
         }
 
         return $out;
+    }
+
+    /**
+     * Get the messages for the instance.
+     *
+     * @return \Illuminate\Support\MessageBag
+     */
+    public function getMessageBag()
+    {
+        return new MessageBag($this->toArray());
     }
 }
