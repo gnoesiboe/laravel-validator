@@ -64,10 +64,14 @@ And use it in your controller like this:
 
 // in controller
 
+$input = \Input::all();
+
 try {
-    \ValidationManager::validateSet(\Input::all(), new AccountRegisterConstraintSet());
+    \ValidationManager::validateSet($input, new AccountRegisterConstraintSet());
 } catch (ValidationSetException $e) {
-    // use the exception set (that contains individual exceptions for all errors) to build your response
+    return \Redirect::back()
+        ->withInput($input)
+        ->withErrors($e);
 }
 ```
 
@@ -83,7 +87,9 @@ Or you can catch the exceptions in your `global.php` for a more generic setup:
 // in global.php
 
 App::error(function (Gnoesiboe\Validator\Exception\ValidationSetException $exception) {
-    // build your response once and re-use it throughout your application
+    return \Redirect::back()
+        ->withInput(\Input::all())
+        ->withErrors($e);
 });
 ```
     
